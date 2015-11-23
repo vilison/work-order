@@ -36,4 +36,61 @@ class User extends Model implements AuthenticatableContract,
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    /**
+     * ----------------------------------------
+     * UserInterface
+     * ----------------------------------------
+     */
+
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * ----------------------------------------
+     * RemindableInterface
+     * ----------------------------------------
+     */
+
+    public function getReminderEmail()
+    {
+        return $this->email;
+    }
+
+    public function getRememberToken()
+    {
+        return $this->remember_token;
+    }
+
+    public function setRememberToken($value)
+    {
+        $this->remember_token = $value;
+    }
+
+    public function getRememberTokenName()
+    {
+        return 'remember_token';
+    }
+
+    public function login($name,$password){
+        return $this->where('name','=',$name)->where('password','=',$password)->first();
+    }
+
+    public function scopeRecent($query){
+        return $query->orderBy('created_at','desc');
+    }
+
+    public function scopeStatus($query,$status){
+        if($status!=0){
+            return $query->where('status','=',$status);
+        }
+        return $query;
+    }
 }
