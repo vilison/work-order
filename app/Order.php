@@ -32,4 +32,12 @@ class Order extends Model
         'GivenArrivalTime',
         'Mobile'
     ];
+
+    public function scopeOrder($query,$name,$sort){
+        if(empty($name))
+            $name = 'RepairCreateTime';
+        if(empty($sort))
+            $sort = 'desc';
+        return $query->orderBy($name,$sort);
+    }
 }
