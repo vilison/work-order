@@ -20,3 +20,7 @@ Route::get('user/index/{status?}','UserController@index');
 Route::post('user/store','UserController@store');
 Route::post('user/leave','UserController@leave');
 Route::post('user/upwd','UserController@upwd');
+
+Route::get('log/index','LogController@index');
+
+Route::get('order/appGetMaintianWorkFormAct','OrderController@appGetMaintianWorkFormAct');
