@@ -17,9 +17,17 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $name = $request->input('name', 'RepairCreateTime');
+        $sort = $request->input('sort', 'desc');
+        $orders = Order::order($name,$sort)->paginate(10);
+        return view('order.index',array(
+            'orders'=>$orders,
+            'name'=>$name,
+            'sort'=>$sort
+        ));
     }
 
     /**

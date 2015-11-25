@@ -23,4 +23,5 @@ Route::post('user/upwd','UserController@upwd');
 
 Route::get('log/index','LogController@index');
 
+Route::get('order/index','OrderController@index');
 Route::get('order/appGetMaintianWorkFormAct','OrderController@appGetMaintianWorkFormAct');
