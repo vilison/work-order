@@ -1,9 +1,38 @@
 @extends('layouts.default')
+@section('styles')
+    <link href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+@stop
+@section('scripts')
+    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#bdate').datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            });
+            $('#edate').datetimepicker({
+                weekStart: 1,
+                todayBtn:  1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            });
+        });
+    </script>
+@stop
 @section('content')
     <form class="form-inline">
         <div class="form-group">
-                <label for="operator" class="col-sm-4 control-label">人员</label>
-                <select id="operator" class="col-sm-2 form-control" name="operator">
+                <label for="operator">人员</label>
+                <select id="operator" class="form-control" name="operator">
                     <option value="" {{$operator==''?'selected':''}}>全部</option>
                     @if(count($users))
                         @foreach($users as $u)
@@ -13,10 +42,17 @@
                 </select>
         </div>
         <div class="form-group">
-            <label for="exampleInputEmail2">Email</label>
-            <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
+            <label for="bdate">时间 从</label>
+            <input class="form-control" type="text" value="{{$bdate}}" name="bdate" id="bdate" data-date-format="yyyy-mm-dd" placeholder="">
         </div>
-        <button type="submit" class="btn btn-default">Send invitation</button>
+        <div class="form-group">
+            <label for="bdate"> 到</label>
+            <input class="form-control" type="text" value="{{$edate}}" name="edate" id="edate" data-date-format="yyyy-mm-dd" placeholder="">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" value="{{$key}}" name="key" id="key" placeholder="查询关键字">
+        </div>
+        <button type="submit" class="btn btn-default">查询</button>
     </form>
     <table class="table table-striped">
         <thead>
