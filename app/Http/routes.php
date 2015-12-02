@@ -25,3 +25,5 @@ Route::get('log/index','LogController@index');
 
 Route::get('order/index','OrderController@index');
 Route::get('order/appGetMaintianWorkFormAct','OrderController@appGetMaintianWorkFormAct');
+
+Route::get('setting/index','SettingController@index');
