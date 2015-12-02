@@ -20,15 +20,15 @@ class LogController extends Controller
     {
         //
         $operator = $request->input('operator', '');
-        $day1 = $request->input('day1', '');
-        $day2 = $request->input('day2', '');
+        $bdate = $request->input('bdate', '');
+        $edate = $request->input('edate', '');
         $key = $request->input('key', '');
         $users = User::all();
-        $logs = Log::operator($operator)->key($key)->between($day1,$day2)->recent()->paginate(15);
+        $logs = Log::operator($operator)->key($key)->between($bdate,$edate)->recent()->paginate(15);
         return view('log.index',array(
             'operator'=>$operator,
-            'day1'=>$day1,
-            'day2'=>$day2,
+            'bdate'=>$bdate,
+            'edate'=>$edate,
             'key'=>$key,
             'logs'=>$logs,
             'users'=>$users
