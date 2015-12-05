@@ -27,3 +27,10 @@ Route::get('order/index','OrderController@index');
 Route::get('order/appGetMaintianWorkFormAct','OrderController@appGetMaintianWorkFormAct');
 
 Route::get('setting/index','SettingController@index');
+Route::post('setting/usn','SettingController@usn');
+Route::post('setting/usend','SettingController@usend');
+Route::post('setting/ucrm','SettingController@ucrm');
+Route::post('setting/utime','SettingController@utime');
+
+Route::post('nhserver/store','NhserverController@store');
+Route::post('nhserver/update','NhserverController@update');

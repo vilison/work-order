@@ -18,6 +18,7 @@ class Setting extends Model
         'crm_account',
         'crm_password',
         'timeout',
-        'refresh_interval'
+        'refresh_interval',
+        'warn_timeout'
     ];
 }

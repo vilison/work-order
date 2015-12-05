@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Nhserver;
 use App\Setting;
 use Illuminate\Http\Request;
 
@@ -19,8 +20,10 @@ class SettingController extends Controller
     {
         //
         $setting = Setting::findOrFail(1);
+        $nhservers = Nhserver::all();
         return view('setting.index',array(
-            'setting'=>$setting
+            'setting'=>$setting,
+            'nhservers' => $nhservers
         ));
     }
 
@@ -74,9 +77,53 @@ class SettingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function usn(Request $request)
     {
         //
+        $id=1;
+        $setting = Setting::find($id);
+        $setting->supplier_number = $request->supplier_number;
+        $setting->save();
+        echo 1;
+    }
+
+    public function usend(Request $request)
+    {
+        //
+        $id=1;
+        $setting = Setting::find($id);
+        $setting->mail_server = $request->mail_server;
+        $setting->mail_server_port = $request->mail_server_port;
+        $setting->mail_account = $request->mail_account;
+        $setting->mail_password = $request->mail_password;
+        $setting->save();
+        echo 1;
+    }
+
+    public function ucrm(Request $request)
+    {
+        //
+        $id=1;
+        $setting = Setting::find($id);
+        $setting->crm_server = $request->crm_server;
+        $setting->crm_server_port = $request->crm_server_port;
+        $setting->crm_account = $request->crm_account;
+        $setting->crm_password = $request->crm_password;
+        $setting->timeout = $request->timeout;
+        $setting->warn_timeout = $request->warn_timeout;
+        $setting->save();
+        echo 1;
+    }
+
+    public function utime(Request $request)
+    {
+        //
+        $id=1;
+        $setting = Setting::find($id);
+        $setting->refresh_interval = $request->refresh_interval;
+        $setting->warn_timeout = $request->warn_timeout;
+        $setting->save();
+        echo 1;
     }
 
     /**
