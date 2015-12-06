@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    public $primaryKey = 'WFormId';
     //
     protected $fillable = [
+        'current',
+        'location_id',
+        'time_log',
+        'data_content',
         'WFormId',
         'Identifier',
         'WFormSetTime',
@@ -20,8 +23,6 @@ class Order extends Model
         'InstallAddress',
         'ModelId',
         'BrandId',
-        'DevManager',
-        'DevManagerTel',
         'RepairInfo',
         'Engineer',
         'RepairCreateTime',
@@ -30,7 +31,14 @@ class Order extends Model
         'RepairformSts',
         'MaintianComTel',
         'GivenArrivalTime',
-        'Mobile'
+        'Mobile',
+        'ebs_id',
+        'ebs_content',
+        'flag1',
+        'flag2',
+        'flag3',
+        'flag4',
+        'flag5'
     ];
 
     public function scopeOrder($query,$name,$sort){
