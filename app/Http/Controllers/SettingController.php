@@ -121,6 +121,8 @@ class SettingController extends Controller
         $id=1;
         $setting = Setting::find($id);
         $setting->refresh_interval = $request->refresh_interval;
+        if(intval($setting->refresh_interval)<1)
+            $setting->refresh_interval = 1;
         $setting->warn_timeout = $request->warn_timeout;
         $setting->save();
         echo 1;

@@ -23,8 +23,14 @@ Route::post('user/upwd','UserController@upwd');
 
 Route::get('log/index','LogController@index');
 
-Route::get('order/index','OrderController@index');
-Route::get('order/appGetMaintianWorkFormAct','OrderController@appGetMaintianWorkFormAct');
+Route::get('ticket/index','TicketController@index');
+Route::get('ticket/appGetMaintianWorkFormAct','TicketController@appGetMaintianWorkFormAct');
+Route::post('ticket/check','TicketController@check');
+Route::post('ticket/clearCheck','TicketController@clearCheck');
+Route::post('ticket/delCheck','TicketController@delCheck');
+Route::get('ticket/show/{id}','TicketController@show');
+Route::get('ticket/nhdata/{id}','TicketController@nhdata');
+Route::get('ticket/ebsdata/{id}','TicketController@ebsdata');
 
 Route::get('setting/index','SettingController@index');
 Route::post('setting/usn','SettingController@usn');

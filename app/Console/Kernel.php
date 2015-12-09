@@ -26,6 +26,6 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('inspire')
                  ->hourly();
-        $schedule->call('OrderController@appGetMaintianWorkFormAct')->everyTenMinutes();
+        $schedule->call('TicketController@appGetMaintianWorkFormAct')->everyTenMinutes();
     }
 }
