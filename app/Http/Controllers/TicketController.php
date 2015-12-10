@@ -207,7 +207,13 @@ class TicketController extends Controller
     }
 
     public function ebs(){
-        $callback = "";
+        return view('ticket.ebs');
+    }
+
+    public function ebspost(Request $request){
+        $callback = "http://123.57.218.251:8000/ticket/ebscallback";
+        $xml = $request->xml;
+        /**
         $xml = "<?xml version = '1.0' encoding = 'UTF-8'?>
                 <WnspServiceRequest>
                     <address/>
@@ -268,20 +274,34 @@ class TicketController extends Controller
                     <noteType />
                     <noteContent />
                 </WnspServiceRequest>";
+         * */
+        $file = "log.txt";
+        $dt = date('Y-m-d H:i:s');
+        file_put_contents($file, "post $dt\r\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($file, "$xml\r\n\r\n\r\n\r\n", FILE_APPEND | LOCK_EX);
         $curl = new Curl();
         $curl->setHeader('Content-Type', 'text/xml');
         $curl->post('https://edi-test.wincor-nixdorf.com/customer-in/v3.0/incident', $xml);
-        var_dump($curl->response);
+        echo $curl->response;
     }
 
     public function ebscallback(){
         $file_in = file_get_contents("php://input"); //接收post数据
         $xml = simplexml_load_string($file_in);//转换post数据为simplexml对象
         $file = "log.txt";
+        $dt = date('Y-m-d H:i:s');
+        file_put_contents($file, "callback $dt", FILE_APPEND | LOCK_EX);
         foreach($xml->children() as $child)    //遍历所有节点数据
         {
             $result = $child->getName() . ": " . $child . "\r\n"; //打印节点名称和节点值
             file_put_contents($file, $result, FILE_APPEND | LOCK_EX);
         }
+        file_put_contents($file, "\r\n\r\n\r\n", FILE_APPEND | LOCK_EX);
+    }
+
+    public function ebslog(){
+        $file = fopen("log.txt", "r") or die("Unable to open file!");
+        echo fread($file,filesize("log.txt"));
+        fclose($file);
     }
 }
