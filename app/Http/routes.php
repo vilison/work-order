@@ -32,6 +32,9 @@ Route::get('ticket/show/{id}','TicketController@show');
 Route::get('ticket/nhdata/{id}','TicketController@nhdata');
 Route::get('ticket/ebsdata/{id}','TicketController@ebsdata');
 
+Route::get('ticket/ebs','TicketController@ebs');
+Route::post('ticket/ebscallback','TicketController@ebscallback');
+
 Route::get('setting/index','SettingController@index');
 Route::post('setting/usn','SettingController@usn');
 Route::post('setting/usend','SettingController@usend');

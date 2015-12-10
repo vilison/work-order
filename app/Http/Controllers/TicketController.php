@@ -205,4 +205,83 @@ class TicketController extends Controller
         }
         $curl->close();
     }
+
+    public function ebs(){
+        $callback = "";
+        $xml = "<?xml version = '1.0' encoding = 'UTF-8'?>
+                <WnspServiceRequest>
+                    <address/>
+                    <helpdeskNumber>03122015TSC0001</helpdeskNumber>
+                    <reportedDate/>
+                    <event>CREATE</event>
+                    <customerName>ABC Nanjin 南京农行</customerName>
+                    <customerAccountNumber>50CN5501585</customerAccountNumber>
+                    <customerHelpdeskNumber/>
+                    <customerTimezone>CSTCN</customerTimezone>
+                    <project/>
+                    <projectNumber/>
+                    <productSerialNumber>P03CNEQ_10015305</productSerialNumber>
+                    <productTag>1306011J</productTag>
+                    <productSystem/>
+                    <productDescription>ProCash 3100</productDescription>
+                    <productCustomerSerialnumber/>
+                    <installedAddress1></installedAddress1>
+                    <installedAddress2/>
+                    <installedAddress3></installedAddress3>
+                    <installedAddress4/>
+                    <installedCity>Chongqing</installedCity>
+                    <installedState/>
+                    <installedPostalcode>999999</installedPostalcode>
+                    <installedCountry>CN</installedCountry>
+                    <installedContact/>
+                    <installedPhone/>
+                    <installedFax/>
+                    <installedEmail/>
+                    <callerFirstName>Thomas</callerFirstName>
+                    <callerLastName>Schlößer</callerLastName>
+                    <callerPhone>+49 5251 693 4772</callerPhone>
+                    <callerPhoneType>PHONE</callerPhoneType>
+                    <callerEmail>thomas.schloesser@wincor-nixdorf.com</callerEmail>
+                    <callerPreferredLanguage/>
+                    <callerPreferredComm/>
+                    <errorType>TT</errorType>
+                    <urgency>PF</urgency>
+                    <summary>CN - CustIn - Agriculture Bank of China</summary>
+                    <customerErrorCode/>
+                    <problemCode/>
+                    <ordertext1>ordertext1</ordertext1>
+                    <ordertext2>ordertext2</ordertext2>
+                    <customerKey>CN_ABC_XINMAI</customerKey>
+                    <status>New</status>
+                    <channel>HTTP</channel>
+                    <replyAddress>$callback</replyAddress>
+                    <ownerName>CN Customer Interfaces</ownerName>
+                    <serviceRequestNumber/>
+                    <transactionNumber/>
+                    <targetDate/>
+                    <plannedEndCallback/>
+                    <plannedStartFieldService/>
+                    <plannedEndFieldService/>
+                    <sparepartProposal/>
+                    <preferredEngineer/>
+                    <ServiceProviderID/>
+                    <noteType />
+                    <noteContent />
+                </WnspServiceRequest>";
+        $curl = new Curl();
+        $curl->setHeader('Content-Type', 'text/xml');
+        $curl->post('https://edi-test.wincor-nixdorf.com/customer-in/v3.0/incident', $xml);
+        var_dump($curl->response);
+    }
+
+    public function ebscallback(){
+        $file_in = file_get_contents("php://input"); //接收post数据
+        $xml = simplexml_load_string($file_in);//转换post数据为simplexml对象
+        $file = "log.txt";
+        foreach($xml->children() as $child)    //遍历所有节点数据
+        {
+            $result = $child->getName() . ": " . $child . "\r\n"; //打印节点名称和节点值
+            file_put_contents($file, $result, FILE_APPEND | LOCK_EX);
+        }
+    }
 }
