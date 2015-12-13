@@ -11,7 +11,7 @@
                 工单状态：{{$ticket->getTicketStatu()}}<br/>
                 超时：{{$ticket->getResp($setting->warn_timeout,"响应超时")}}{{$ticket->getArrival($setting->warn_timeout,"到场超时")}}{{$ticket->getRepair($setting->warn_timeout,"修复超时")}}<br/>
                 所在地区：{{$ticket->getLocation()}}<br/>
-                负责工程师：<br/>
+                负责工程师：{{$ticket->created_at}}<br/>
                 最后更新：{{$ticket->created_at}}
             </p>
         </div>

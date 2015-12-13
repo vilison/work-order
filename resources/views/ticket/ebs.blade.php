@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <title>ebs 调试</title>
-    <link rel="stylesheet" href="/assets/bootstrap-3.3.5/css/bootstrap.css">
-    <script src="/assets/js/jquery.min.js" type="text/javascript"></script>
-    <script src="/assets/js/jquery.form.js" type="text/javascript"></script>
-    <script src="/assets/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://123.57.218.251/work-order/public/assets/bootstrap-3.3.5/css/bootstrap.css">
+    <script src="https://123.57.218.251/work-order/public/assets/js/jquery.min.js" type="text/javascript"></script>
+    <script src="https://123.57.218.251/work-order/public/assets/js/jquery.form.js" type="text/javascript"></script>
+    <script src="https://123.57.218.251/work-order/public/assets/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
     <script>
         Config = {
             'token': '{{csrf_token()}}'
         };
     </script>
-    <link href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/scojs.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/sco.message.css" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-sco/js/sco.message.js" charset="UTF-8"></script>
+    <link href="https://123.57.218.251/work-order/public/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="https://123.57.218.251/work-order/public/assets/bootstrap-sco/css/scojs.css" rel="stylesheet" media="screen">
+    <link href="https://123.57.218.251/work-order/public/assets/bootstrap-sco/css/sco.message.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="https://123.57.218.251/work-order/public/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://123.57.218.251/work-order/public/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="https://123.57.218.251/work-order/public/assets/bootstrap-sco/js/sco.message.js" charset="UTF-8"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -25,7 +25,7 @@
             $("#btn").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: '/ticket/ebspost' ,
+                    url: 'https://123.57.218.251/work-order/ticket/ebspost' ,
                     data: {xml:$("#xml").val(),_token:Config.token} ,
                     success: function(data){
                         $("#resp").text(data);
@@ -33,10 +33,20 @@
                 });
             });
 
+            $("#btn2").click(function(){
+                $.ajax({
+                    type: 'POST',
+                    url: 'https://123.57.218.251:443/work-order/ticket/ebscallback' ,
+                    data: {} ,
+                    success: function(data){
+                    }
+                });
+            });
+
             setInterval(function(){
                 $.ajax({
                     type: 'POST',
-                    url: '/ticket/ebslog' ,
+                    url: 'https://123.57.218.251/work-order/ticket/ebslog' ,
                     data: {_token:Config.token} ,
                     success: function(data){
                         $("#log").text(data);
@@ -48,14 +58,17 @@
 </head>
 
 <body>
-<form id="post-form" action="/ticket/ebspost" method="post">
+<form id="call-form" action="https://123.57.218.251:443/work-order/ticket/ebscallback" method="post">
+    <button id="btn2" type="button">Test callback</button>
+</form>
+<form id="post-form" action="http://123.57.218.251/work-order/ticket/ebspost" method="post">
     <input type="hidden" name="_token" value="{{csrf_token()}}">
-    callback：http://123.57.218.251:8000/ticket/ebscallback<br/>
+    callback：https://123.57.218.251:443/work-order/ticket/ebscallback<br/>
     <textarea id="xml" name="xml" cols="100" rows="20">
         <?xml version = '1.0' encoding = 'UTF-8'?>
         <WnspServiceRequest>
             <address/>
-            <helpdeskNumber>03122015TSC0001</helpdeskNumber>
+            <helpdeskNumber>10122015BIN0001</helpdeskNumber>
             <reportedDate/>
             <event>CREATE</event>
             <customerName>ABC Nanjin 南京农行</customerName>
@@ -98,7 +111,7 @@
             <customerKey>CN_ABC_XINMAI</customerKey>
             <status>New</status>
             <channel>HTTP</channel>
-            <replyAddress>http://123.57.218.251:8000/ticket/ebscallback</replyAddress>
+            <replyAddress>https://123.57.218.251/work-order/ticket/ebscallback</replyAddress>
             <ownerName>CN Customer Interfaces</ownerName>
             <serviceRequestNumber/>
             <transactionNumber/>

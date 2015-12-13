@@ -73,7 +73,13 @@
             $("#all-check").change(function() {
                 var isChecked = $(this).prop("checked");
                 $("input[name='tid']").prop("checked", isChecked);
-                check();
+                if (isChecked) {
+                    check();
+                }else{
+                    $("input[name='tid']").each(function(){
+                        delCheck($(this).val());
+                    });
+                }
             });
             $("#clearCheck").click(function(){
                 clearCheck();
@@ -100,7 +106,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/ticket/check' ,
-                data: {tids:tids,_token:Config.token} ,
+                data: {tids:tids,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
                     changeCount(data.count);
@@ -112,7 +118,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/ticket/delCheck' ,
-                data: {tid:tid,_token:Config.token} ,
+                data: {tid:tid,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
                     changeCount(data.count);
@@ -123,7 +129,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/ticket/clearCheck' ,
-                data: {_token:Config.token} ,
+                data: {tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
                     if(data.result){

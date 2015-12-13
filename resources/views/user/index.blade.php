@@ -32,9 +32,11 @@
         <td>{{$u->name}}</td>
         <td>{{$u->email}}</td>
         <td>
+            @if($u->isadmin==0)
             <button rel="reset" type="button" class="btn btn-default btn-xs">重置密码</button>
             @if($u->status==1)
             <button rel="leave" type="button" class="btn btn-danger btn-xs">离职</button>
+            @endif
             @endif
         </td>
     </tr>
