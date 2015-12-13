@@ -12,4 +12,11 @@ class Nhserver extends Model
         'port',
         'province'
     ];
+
+    public function scopeProvince($query,$province){
+        if(!empty($province)) {
+            return $query->where('province','=',$province);
+        }
+
+    }
 }

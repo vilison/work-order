@@ -12,4 +12,11 @@ class Engineer extends Model
         'workcardid',
         'mobile'
     ];
+
+    public function scopeName($query,$name){
+        if(!empty($name)){
+            return $query->where('name','=',$name);
+        }
+        return $query;
+    }
 }

@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -21,6 +23,11 @@ class UserController extends Controller
         //$status = empty($request->status)?1:$request->status;
         $users = User::status($status)->recent()->get();
         return view('user.index',array('users'=>$users,'status'=>$status));
+    }
+
+    public function info(){
+        $user = Auth::user();
+        return view('user.info',array('email'=>$user->email,'listrow'=>$user->listrow));
     }
 
     /**
@@ -63,7 +70,7 @@ class UserController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
     }
 
@@ -135,7 +142,40 @@ class UserController extends Controller
 
         $id = $request->id;
         $user = User::findOrFail($id);
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->save();
+    }
+
+    public function updatepwd(Request $request){
+        $user = Auth::user();
+        $user = User::findOrFail($user->id);
+        if(!Hash::check($request->oldpassword, $user->password)){
+            $data['result'] = false;
+            $data['msg'] = '原密码错误';
+            return json_encode($data);
+        }
+        $user->password = Hash::make($request->newpassword);
+        $user->save();
+        $data['result'] = true;
+        $data['msg'] = '修改成功';
+        return json_encode($data);
+    }
+
+    public function updateemail(Request $request){
+        $user = Auth::user();
+        $user->email = $request->email;
+        $user->save();
+        $data['result'] = true;
+        $data['msg'] = '修改成功';
+        return json_encode($data);
+    }
+
+    public function updatelr(Request $request){
+        $user = Auth::user();
+        $user->listrow = $request->listrow;
+        $user->save();
+        $data['result'] = true;
+        $data['msg'] = '修改成功';
+        return json_encode($data);
     }
 }

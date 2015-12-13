@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 require __DIR__ . '/../../../vendor/autoload.php';
 
+use App\Nhserver;
 use App\Setting;
 use App\Ticket;
 use Curl\Curl;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Controller;
 
 class TicketController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +46,62 @@ class TicketController extends Controller
             'num' => $num,
             'tids'=>$tids,
             'allCheck'=>$allCheck
+        ));
+    }
+
+    public function search(Request $request)
+    {
+        $pageSize = 10;
+        $name = $request->input('name', 'RepairCreateTime');
+        $sort = $request->input('sort', 'desc');
+        $bdate = $request->input('bdate', '');
+        $edate = $request->input('edate', '');
+        $province = $request->input('province', '0');
+        $sn = $request->input('sn', '');
+        $ccc = $request->input('ccc', '');
+        $wformid = $request->input('wformid', '');
+        $engineer = $request->input('engineer', '');
+        $ticketStatu = $request->input('ticketStatu', '0');
+        $timeoutMode = $request->input('timeoutMode', '0');
+
+        if($timeoutMode!=0){
+            $ticketStatu = $timeoutMode;
+        }
+
+        $setting = Setting::find(1);
+
+        $tickets = Ticket::current()->between($bdate,$edate)->province($province)->sn($sn)->ccc($ccc)->wformid($wformid)->engineer($engineer)->ticketStatu($ticketStatu)->timeoutMode($timeoutMode,$setting->warn_timeout)->order($name,$sort)->paginate($pageSize);
+
+        $setting = Setting::find(1);
+        $tids = $request->session()->get('search.tids',array());
+        $num = count($tids);
+        $selnum = 0;
+        foreach($tickets as $ticket){
+            if(in_array($ticket->id,$tids))
+                $selnum++;
+        }
+        $allCheck = false;
+        if($selnum==$pageSize)
+            $allCheck = true;
+        $nhservers = Nhserver::all();
+        return view('ticket.search',array(
+            'tickets'=>$tickets,
+            'setting'=>$setting,
+            'name'=>$name,
+            'sort'=>$sort,
+            'num' => $num,
+            'tids'=>$tids,
+            'allCheck'=>$allCheck,
+            'nhservers'=>$nhservers,
+            'bdate'=>$bdate,
+            'edate'=>$edate,
+            'province'=>$province,
+            'sn'=>$sn,
+            'ccc'=>$ccc,
+            'wformid'=>$wformid,
+            'engineer'=>$engineer,
+            'ticketStatu'=>$ticketStatu,
+            'timeoutMode'=>$timeoutMode
         ));
     }
 
@@ -135,26 +193,29 @@ class TicketController extends Controller
 
     public function check(Request $request){
         $tids = $request->tids;
-        $ids = $request->session()->get('index.tids',array());
+        $tag = $request->tag;
+        $ids = $request->session()->get($tag.'.tids',array());
         foreach($tids as $tid){
             $ids[$tid] = $tid;
         }
-        $request->session()->put('index.tids',$ids);
+        $request->session()->put($tag.'.tids',$ids);
         $data['count'] = count($ids);
         $data['tids'] = $ids;
         echo json_encode($data);
     }
 
     public function clearCheck(Request $request){
-        $request->session()->forget('index.tids');
+        $tag = $request->tag;
+        $request->session()->forget($tag.'.tids');
         echo json_encode(array('result'=>true));
     }
 
     public function delCheck(Request $request){
         $tid = $request->tid;
-        $ids = $request->session()->get('index.tids',array());
+        $tag = $request->tag;
+        $ids = $request->session()->get($tag.'.tids',array());
         unset($ids[$tid]);
-        $request->session()->put('index.tids',$ids);
+        $request->session()->put($tag.'.tids',$ids);
         $data['count'] = count($ids);
         $data['tids'] = $ids;
         echo json_encode($data);
@@ -285,17 +346,23 @@ class TicketController extends Controller
         echo $curl->response;
     }
 
-    public function ebscallback(){
-        $file_in = file_get_contents("php://input"); //接收post数据
-        $xml = simplexml_load_string($file_in);//转换post数据为simplexml对象
+    public function ebscallback(Request $request){
+        $input = $request->all();
         $file = "log.txt";
         $dt = date('Y-m-d H:i:s');
         file_put_contents($file, "callback $dt", FILE_APPEND | LOCK_EX);
-        foreach($xml->children() as $child)    //遍历所有节点数据
-        {
-            $result = $child->getName() . ": " . $child . "\r\n"; //打印节点名称和节点值
-            file_put_contents($file, $result, FILE_APPEND | LOCK_EX);
-        }
+        file_put_contents($file, $input, FILE_APPEND | LOCK_EX);
+//
+//        $file_in = file_get_contents("php://input"); //接收post数据
+//        $xml = simplexml_load_string($file_in);//转换post数据为simplexml对象
+//        $file = "log.txt";
+//        $dt = date('Y-m-d H:i:s');
+//        file_put_contents($file, "callback $dt", FILE_APPEND | LOCK_EX);
+//        foreach($xml->children() as $child)    //遍历所有节点数据
+//        {
+//            $result = $child->getName() . ": " . $child . "\r\n"; //打印节点名称和节点值
+//            file_put_contents($file, $result, FILE_APPEND | LOCK_EX);
+//        }
         file_put_contents($file, "\r\n\r\n\r\n", FILE_APPEND | LOCK_EX);
     }
 
