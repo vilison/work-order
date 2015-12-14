@@ -13,9 +13,9 @@ use Auth;
 class AuthController extends Controller
 {
 
-    protected $redirectAfterLogout = '/auth/login';
-    protected $redirectPath  = '/ticket/index';
-    protected $loginPath = '/auth/login';
+    protected $redirectAfterLogout = 'auth/login';
+    protected $redirectPath  = 'ticket/index';
+    protected $loginPath = 'auth/login';
 
     /**
      * Create a new authentication controller instance.
