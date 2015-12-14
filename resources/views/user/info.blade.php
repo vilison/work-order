@@ -1,10 +1,10 @@
 @extends('layouts.default')
 @section('styles')
-    <link href="/assets/bootstrap-sco/css/scojs.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/sco.message.css" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/sco.message.css')}}" rel="stylesheet" media="screen">
 @stop
 @section('scripts')
-    <script type="text/javascript" src="/assets/bootstrap-sco/js/sco.message.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-sco/js/sco.message.js')}}" charset="UTF-8"></script>
 @stop
 @section('content')
     <div class="panel panel-default">
@@ -82,7 +82,7 @@
                 }
                 $.ajax({
                     type: 'POST',
-                    url: '/user/updatepwd' ,
+                    url: 'user/updatepwd' ,
                     data: {oldpassword:$("#oldpassword").val(),newpassword:$("#newpassword").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -99,7 +99,7 @@
             $("button[rel='updateemail']").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: '/user/updateemail' ,
+                    url: 'user/updateemail' ,
                     data: {email:$("#email").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -115,7 +115,7 @@
             $("button[rel='updatelr']").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: '/user/updatelr' ,
+                    url: 'user/updatelr' ,
                     data: {listrow:$("#listrow").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){

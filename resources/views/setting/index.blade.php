@@ -1,13 +1,13 @@
 @extends('layouts.default')
 @section('styles')
-    <link href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/scojs.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/sco.message.css" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/sco.message.css')}}" rel="stylesheet" media="screen">
 @stop
 @section('scripts')
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-sco/js/sco.message.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-sco/js/sco.message.js')}}" charset="UTF-8"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('#date').datetimepicker({
@@ -28,7 +28,7 @@
             <h3 class="panel-title">系统配置</h3>
         </div>
         <div class="panel-body">
-            <form id="form_usn" class="form-inline" action="/setting/usn" method="post">
+            <form id="form_usn" class="form-inline" action="setting/usn" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group">
                     <label for="supplier_number">供应商编号</label>
@@ -37,7 +37,7 @@
                 </div>
             </form>
             <div style="padding: 10px 0px;"><label>发送邮件配置</label></div>
-            <form class="form-inline row" id="form_usend" action="/setting/usend" method="post">
+            <form class="form-inline row" id="form_usend" action="setting/usend" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-3">
                     <label>服务器</label>
@@ -60,7 +60,7 @@
                 </div>
             </form>
             <div style="padding: 10px 0px;"><label>CRM服务器配置</label></div>
-            <form class="form-inline row" id="form_ucrm" action="/setting/ucrm" method="post">
+            <form class="form-inline row" id="form_ucrm" action="setting/ucrm" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-3">
                     <label>服务器</label>
@@ -88,7 +88,7 @@
                     <button type="button" class="btn btn-default" rel="ucrm">修改</button>
                 </div>
             </form>
-            <form class="form-inline row" id="form_utime" action="/setting/utime" method="post">
+            <form class="form-inline row" id="form_utime" action="setting/utime" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-12">
                     <label>列表刷新间隔</label>
@@ -135,7 +135,7 @@
                 @endforeach
             @endif
             <div style="background: #f5f5f5; padding-top:10px;padding-bottom:10px;">
-                <form class="form-inline row" id="form_nhserver" action="/nhserver/store" method="post">
+                <form class="form-inline row" id="form_nhserver" action="nhserver/store" method="post">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <div class="form-group col-sm-1"></div>
                     <div class="form-group col-sm-3">
@@ -229,7 +229,7 @@
                 var id = $(this).parents("form").find("#id").val();
                 $.ajax({
                     type: 'POST',
-                    url: '/nhserver/update' ,
+                    url: 'nhserver/update' ,
                     data: {id:id,host:host,port:port,province:province,_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){

@@ -54,7 +54,7 @@
             </div>
             <div class="modal-body">
                 <div id="upwd_msg"></div>
-                <form id="upwd_form" class="form-horizontal" action="/user/upwd" method="post">
+                <form id="upwd_form" class="form-horizontal" action="user/upwd" method="post">
                     <input type="hidden" id="upwd_id" name="id" value="">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <div class="form-group">
@@ -86,7 +86,7 @@
                 <div id="msg">
 
                 </div>
-                <form id="create_form" class="form-horizontal" action="/user/store" method="post">
+                <form id="create_form" class="form-horizontal" action="user/store" method="post">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label">登录名</label>
@@ -122,7 +122,7 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $("#changeStatus").change(function(){
-                location.href = '/user/index/'+$("#changeStatus").val();
+                location.href = 'user/index/'+$("#changeStatus").val();
             });
 
             $("button[rel='reset']").click(function(){
@@ -136,7 +136,7 @@
                 if(confirm("该用户确定离职操作？")){
                     $.ajax({
                         type: 'POST',
-                        url: '/user/leave' ,
+                        url: 'user/leave' ,
                         data: {id:id,_token:Config.token} ,
                         dataType: 'json',
                         success: function(){

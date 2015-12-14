@@ -23,15 +23,15 @@
             <th rowspan="2">
                 <input type="checkbox" id="all-check" {{$allCheck?'checked':''}}>
             </th>
-            <th rowspan="2"><a href="/order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th colspan="3" style="text-align: center; border:none;">
                 超时
             </th>
-            <th rowspan="2"><a href="/order/index/?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/index/?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2">操作</th>
         </tr>
         <tr >
@@ -57,7 +57,7 @@
                     <td>{{$o->getLocation()}}</td>
                     <td>{{$o->InstallAddress}}</td>
                     <td>
-                        <a href="/ticket/show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
+                        <a href="ticket/show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
                     </td>
                 </tr>
             @endforeach
@@ -105,7 +105,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: '/ticket/check' ,
+                url: 'ticket/check' ,
                 data: {tids:tids,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -117,7 +117,7 @@
         function delCheck(tid){
             $.ajax({
                 type: 'POST',
-                url: '/ticket/delCheck' ,
+                url: 'ticket/delCheck' ,
                 data: {tid:tid,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -128,7 +128,7 @@
         function clearCheck() {
             $.ajax({
                 type: 'POST',
-                url: '/ticket/clearCheck' ,
+                url: 'ticket/clearCheck' ,
                 data: {tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){

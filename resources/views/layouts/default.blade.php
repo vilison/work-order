@@ -14,10 +14,10 @@
     <meta name="author" content="vilison." />
     <meta name="description" content="@section('description') @show" />
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="stylesheet" href="/assets/bootstrap-3.3.5/css/bootstrap.css">
-    <script src="/assets/js/jquery.min.js" type="text/javascript"></script>
-    <script src="/assets/js/jquery.form.js" type="text/javascript"></script>
-    <script src="/assets/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ asset('assets/bootstrap-3.3.5/css/bootstrap.css')}}">
+    <script src="{{asset('assets/js/jquery.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/js/jquery.form.js')}}" type="text/javascript"></script>
+    <script src="{{asset('assets/js/jquery.min.jsbootstrap-3.3.5/js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script>
         Config = {
             'token': '{{csrf_token()}}'

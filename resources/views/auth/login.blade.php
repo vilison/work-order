@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <title>农行工单管理系统</title>
-    <link rel="stylesheet" href="/assets/bootstrap-3.3.5/css/bootstrap.css">
-    <script src="/assets/js/jquery.min.js" type="text/javascript"></script>
-    <script src="/assets/js/jquery.form.js" type="text/javascript"></script>
-    <script src="/assets/bootstrap-3.3.5/js/bootstrap.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="{{ asset('assets/bootstrap-3.3.5/css/bootstrap.css')}}">
+    <script src="{{ asset('assets/js/jquery.min.js')}}" type="text/javascript"></script>
+    <script src="{{ asset('assets/js/jquery.form.js')}}" type="text/javascript"></script>
+    <script src="{{ asset('assets/bootstrap-3.3.5/js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script>
         Config = {
             'token': '{{csrf_token()}}'
         };
     </script>
-    <link href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/scojs.css" rel="stylesheet" media="screen">
-    <link href="/assets/bootstrap-sco/css/sco.message.css" rel="stylesheet" media="screen">
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-sco/js/sco.message.js" charset="UTF-8"></script>
+    <link href="{{ asset('assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/sco.message.css')}}" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-sco/js/sco.message.js')}}" charset="UTF-8"></script>
     <style type="text/css">
         .warp {
             width: 300px;

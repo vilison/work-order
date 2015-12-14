@@ -73,7 +73,7 @@
         </div>
         <div class="panel-body">
             <p>
-                <a href="/ticket/nhdata/{{$ticket->id}}" class="btn btn-default btn-xs">农行接口数据原文</a>
+                <a href="ticket/nhdata/{{$ticket->id}}" class="btn btn-default btn-xs">农行接口数据原文</a>
                 <a href="#" class="btn btn-default btn-xs">EBS接口数据原文</a>
             </p>
         </div>

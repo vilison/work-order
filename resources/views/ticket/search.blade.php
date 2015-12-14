@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('styles')
-    <link href="/assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
     <style>
         .table > thead > tr > th {
             vertical-align: middle;
@@ -12,8 +12,8 @@
     </style>
 @stop
 @section('scripts')
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="/assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8"></script>
     <script type="text/javascript">
         $(document).ready(function(){
             $('#bdate').datetimepicker({
@@ -129,15 +129,15 @@
             <th rowspan="2">
                 <input type="checkbox" id="all-check" {{$allCheck?'checked':''}}>
             </th>
-            <th rowspan="2"><a href="/order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th colspan="3" style="text-align: center; border:none;">
                 超时
             </th>
-            <th rowspan="2"><a href="/order/index/?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="/order/index/?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="order/search/?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2">操作</th>
         </tr>
         <tr >
@@ -163,7 +163,7 @@
                     <td>{{$o->getLocation()}}</td>
                     <td>{{$o->InstallAddress}}</td>
                     <td>
-                        <a href="/ticket/show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
+                        <a href="ticket/show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
                     </td>
                 </tr>
             @endforeach
@@ -207,7 +207,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: '/ticket/check' ,
+                url: 'ticket/check' ,
                 data: {tids:tids,tag:'search',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -219,7 +219,7 @@
         function delCheck(tid){
             $.ajax({
                 type: 'POST',
-                url: '/ticket/delCheck' ,
+                url: 'ticket/delCheck' ,
                 data: {tid:tid,tag:'search',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -230,7 +230,7 @@
         function clearCheck() {
             $.ajax({
                 type: 'POST',
-                url: '/ticket/clearCheck' ,
+                url: 'ticket/clearCheck' ,
                 data: {tag:'search',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
