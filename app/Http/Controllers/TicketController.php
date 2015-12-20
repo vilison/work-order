@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TicketController extends Controller
 {
@@ -27,6 +28,7 @@ class TicketController extends Controller
         $name = $request->input('name', 'RepairCreateTime');
         $sort = $request->input('sort', 'desc');
         $tickets = Ticket::current()->order($name,$sort)->paginate($pageSize);
+        $tickets->setPath('index');
         $setting = Setting::find(1);
         $tids = $request->session()->get('index.tids',array());
         $num = count($tids);
@@ -71,7 +73,7 @@ class TicketController extends Controller
         $setting = Setting::find(1);
 
         $tickets = Ticket::current()->between($bdate,$edate)->province($province)->sn($sn)->ccc($ccc)->wformid($wformid)->engineer($engineer)->ticketStatu($ticketStatu)->timeoutMode($timeoutMode,$setting->warn_timeout)->order($name,$sort)->paginate($pageSize);
-
+        $tickets->setPath('search');
         $setting = Setting::find(1);
         $tids = $request->session()->get('search.tids',array());
         $num = count($tids);
@@ -103,6 +105,41 @@ class TicketController extends Controller
             'ticketStatu'=>$ticketStatu,
             'timeoutMode'=>$timeoutMode
         ));
+    }
+
+    public function checkExport(Request $request){
+        $tag = $request->tag;
+        $ids = $request->session()->get($tag.'.tids',array());
+        if(count($ids) == 0){
+            return json_encode(array('result'=>false,'msg'=>'请选择要导出的数据'));
+        }
+        return json_encode(array('result'=>true,'msg'=>''));
+    }
+
+    public function export(Request $request){
+        $tag = $request->tag;
+        $ids = $request->session()->get($tag.'.tids',array());
+//        if(count($ids) == 0){
+//            return json_encode(array('msg'=>'请选择要导出的数据'));
+//        }
+        $heads = ['location','time_log','WFormId','Identifier','WFormSetTime','ReplyDue','IsChecked','ArriveDue','WFormContent','OrgName','InstallAddress','ModelId','BrandId','Engineer','RepairCreateTime','RespTime','ArrivalTime','RepairformSts','MaintianComTel','GivenArrivalTime','Mobile','ebs_id'];
+        $cellData[] = $heads;
+        foreach($ids as $id){
+            $ticket = Ticket::find($id);
+            $location = '';
+            if($ticket->location_id != 0){
+                $nhserver = Nhserver::find($ticket->location_id);
+                if($nhserver)
+                    $location = $nhserver->province;
+            }
+            $cell = [$location,$ticket->time_log,$ticket->WFormId,$ticket->Identifier,$ticket->WFormSetTime,$ticket->ReplyDue,$ticket->IsChecked,$ticket->ArriveDue,$ticket->WFormContent,$ticket->OrgName,$ticket->InstallAddress,$ticket->ModelId,$ticket->BrandId,$ticket->Engineer,$ticket->RepairCreateTime,$ticket->RespTime,$ticket->ArrivalTime,$ticket->RepairformSts,$ticket->MaintianComTel,$ticket->GivenArrivalTime,$ticket->Mobile,$ticket->ebs_id];
+            $cellData[] = $cell;
+        }
+        Excel::create(time(),function($excel) use ($cellData){
+            $excel->sheet('data', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
     }
 
     /**
@@ -268,74 +305,74 @@ class TicketController extends Controller
     }
 
     public function ebs(){
-        return view('ticket.ebs');
+        $xml = "<?xml version = '1.0' encoding = 'UTF-8'?>
+        <WnspServiceRequest>
+            <address/>
+            <helpdeskNumber>10122015BIN0001</helpdeskNumber>
+            <reportedDate/>
+            <event>CREATE</event>
+            <customerName>ABC Nanjin 南京农行</customerName>
+            <customerAccountNumber>50CN5501585</customerAccountNumber>
+            <customerHelpdeskNumber/>
+            <customerTimezone>CSTCN</customerTimezone>
+            <project/>
+            <projectNumber/>
+            <productSerialNumber>P03CNEQ_10015305</productSerialNumber>
+            <productTag>1306011J</productTag>
+            <productSystem/>
+            <productDescription>ProCash 3100</productDescription>
+            <productCustomerSerialnumber/>
+            <installedAddress1></installedAddress1>
+            <installedAddress2/>
+            <installedAddress3></installedAddress3>
+            <installedAddress4/>
+            <installedCity>Chongqing</installedCity>
+            <installedState/>
+            <installedPostalcode>999999</installedPostalcode>
+            <installedCountry>CN</installedCountry>
+            <installedContact/>
+            <installedPhone/>
+            <installedFax/>
+            <installedEmail/>
+            <callerFirstName>Thomas</callerFirstName>
+            <callerLastName>Schlößer</callerLastName>
+            <callerPhone>+49 5251 693 4772</callerPhone>
+            <callerPhoneType>PHONE</callerPhoneType>
+            <callerEmail>thomas.schloesser@wincor-nixdorf.com</callerEmail>
+            <callerPreferredLanguage/>
+            <callerPreferredComm/>
+            <errorType>TT</errorType>
+            <urgency>PF</urgency>
+            <summary>CN - CustIn - Agriculture Bank of China</summary>
+            <customerErrorCode/>
+            <problemCode/>
+            <ordertext1>ordertext1</ordertext1>
+            <ordertext2>ordertext2</ordertext2>
+            <customerKey>CN_ABC_XINMAI</customerKey>
+            <status>New</status>
+            <channel>HTTP</channel>
+            <replyAddress>https://123.57.218.251/work-order/public/ticket/ebscallback</replyAddress>
+            <ownerName>CN Customer Interfaces</ownerName>
+            <serviceRequestNumber/>
+            <transactionNumber/>
+            <targetDate/>
+            <plannedEndCallback/>
+            <plannedStartFieldService/>
+            <plannedEndFieldService/>
+            <sparepartProposal/>
+            <preferredEngineer/>
+            <ServiceProviderID/>
+            <noteType />
+            <noteContent />
+        </WnspServiceRequest>";
+        return view('ticket.ebs',array(
+            'xml'=>$xml
+        ));
     }
 
     public function ebspost(Request $request){
-        $callback = "http://123.57.218.251:8000/ticket/ebscallback";
+        //$callback = "http://123.57.218.251:8000/ticket/ebscallback";
         $xml = $request->xml;
-        /**
-        $xml = "<?xml version = '1.0' encoding = 'UTF-8'?>
-                <WnspServiceRequest>
-                    <address/>
-                    <helpdeskNumber>03122015TSC0001</helpdeskNumber>
-                    <reportedDate/>
-                    <event>CREATE</event>
-                    <customerName>ABC Nanjin 南京农行</customerName>
-                    <customerAccountNumber>50CN5501585</customerAccountNumber>
-                    <customerHelpdeskNumber/>
-                    <customerTimezone>CSTCN</customerTimezone>
-                    <project/>
-                    <projectNumber/>
-                    <productSerialNumber>P03CNEQ_10015305</productSerialNumber>
-                    <productTag>1306011J</productTag>
-                    <productSystem/>
-                    <productDescription>ProCash 3100</productDescription>
-                    <productCustomerSerialnumber/>
-                    <installedAddress1></installedAddress1>
-                    <installedAddress2/>
-                    <installedAddress3></installedAddress3>
-                    <installedAddress4/>
-                    <installedCity>Chongqing</installedCity>
-                    <installedState/>
-                    <installedPostalcode>999999</installedPostalcode>
-                    <installedCountry>CN</installedCountry>
-                    <installedContact/>
-                    <installedPhone/>
-                    <installedFax/>
-                    <installedEmail/>
-                    <callerFirstName>Thomas</callerFirstName>
-                    <callerLastName>Schlößer</callerLastName>
-                    <callerPhone>+49 5251 693 4772</callerPhone>
-                    <callerPhoneType>PHONE</callerPhoneType>
-                    <callerEmail>thomas.schloesser@wincor-nixdorf.com</callerEmail>
-                    <callerPreferredLanguage/>
-                    <callerPreferredComm/>
-                    <errorType>TT</errorType>
-                    <urgency>PF</urgency>
-                    <summary>CN - CustIn - Agriculture Bank of China</summary>
-                    <customerErrorCode/>
-                    <problemCode/>
-                    <ordertext1>ordertext1</ordertext1>
-                    <ordertext2>ordertext2</ordertext2>
-                    <customerKey>CN_ABC_XINMAI</customerKey>
-                    <status>New</status>
-                    <channel>HTTP</channel>
-                    <replyAddress>$callback</replyAddress>
-                    <ownerName>CN Customer Interfaces</ownerName>
-                    <serviceRequestNumber/>
-                    <transactionNumber/>
-                    <targetDate/>
-                    <plannedEndCallback/>
-                    <plannedStartFieldService/>
-                    <plannedEndFieldService/>
-                    <sparepartProposal/>
-                    <preferredEngineer/>
-                    <ServiceProviderID/>
-                    <noteType />
-                    <noteContent />
-                </WnspServiceRequest>";
-         * */
         $file = "log.txt";
         $dt = date('Y-m-d H:i:s');
         file_put_contents($file, "post $dt\r\n", FILE_APPEND | LOCK_EX);
