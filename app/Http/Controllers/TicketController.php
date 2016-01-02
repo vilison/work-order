@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TicketController extends Controller
@@ -259,56 +260,160 @@ class TicketController extends Controller
     }
 
     public function appGetMaintianWorkFormAct(){
+        $nhservers = Nhserver::all();
         $curl = new Curl();
-        $p = 0;
-        $retCount = 1;
-        while($retCount!=0){
-            $curl->get('http://abc.yihuacomputer.com:8021/WebSite/appGetMaintianWorkFormAct.ebf', array(
-                'MaintianComTel' => '400335',
-                'PageIndex' => $p++
-            ));
-            $result = $curl->response;
-            $result = mb_convert_encoding($result, "UTF-8", "gb2312");
-            $json_result = json_decode($result);
-            $retCount = count($json_result->Ret);
-            foreach($json_result->Ret as $ret){
-                $order = Ticket::find($ret->WFormId);
-                if(empty($ticket)){
-                    $ticket = new Ticket;
-                    $ticket->WFormId = $ret->WFormId;
-                    $ticket->Identifier = $ret->Identifier;
-                    $ticket->WFormSetTime = $ret->WFormSetTime;
-                    $ticket->ReplyDue = $ret->ReplyDue;
-                    $ticket->IsChecked = $ret->IsChecked;
-                    $ticket->ArriveDue = $ret->ArriveDue;
-                    $ticket->WFormContent = $ret->WFormContent;
-                    $ticket->OrgName = $ret->OrgName;
-                    $ticket->InstallAddress = $ret->InstallAddress;
-                    $ticket->ModelId = $ret->ModelId;
-                    $ticket->BrandId = $ret->BrandId;
-                    $ticket->DevManager = $ret->DevManager;
-                    $ticket->DevManagerTel = $ret->DevManagerTel;
-                    $ticket->RepairInfo = json_encode($ret->RepairInfo);
-                    $ticket->Engineer = $ret->RepairInfo->Engineer;
-                    $ticket->RepairCreateTime = $ret->RepairInfo->RepairCreateTime;
-                    $ticket->RespTime = $ret->RepairInfo->RespTime;
-                    $ticket->ArrivalTime = $ret->RepairInfo->ArrivalTime;
-                    $ticket->RepairformSts = $ret->RepairInfo->RepairformSts;
-                    $ticket->MaintianComTel = $ret->RepairInfo->MaintianComTel;
-                    $ticket->GivenArrivalTime = $ret->RepairInfo->GivenArrivalTime;
-                    $ticket->Mobile = $ret->RepairInfo->Mobile;
-                    $ticket->save();
+        foreach($nhservers as $nhserver){
+            $p = 0;
+            $retCount = 1;
+            while($retCount!=0){
+                $curl->get('http://'.$nhserver->host.':'.$nhserver->port.'/WebSite/appGetMaintianWorkFormAct.ebf', array(
+                    'MaintianComTel' => '400335',
+                    'PageIndex' => $p++
+                ));
+                $result = $curl->response;
+                $result = mb_convert_encoding($result, "UTF-8", "gb2312");
+                $json_result = json_decode($result);
+                $retCount = count($json_result->Ret);
+                foreach($json_result->Ret as $ret){
+                    $historyTicket = Ticket::current()->wformid($ret->WFormId)->find();
+                    if(empty($historyTicket)){
+                        //step 1 save record
+                        $millisecond = microtime(true)*1000;
+                        $time = explode(".",$millisecond);
+                        $millisecond = $time[0];
+                        $api_id = 'ABC'.$millisecond;
+                        $ticket = new Ticket;
+                        $ticket->current = 1;
+                        $ticket->location_id = $nhserver->id;
+                        $ticket->time_log = date('Y-m-d H:i:s');
+                        $ticket->data_content = $result;
+                        $ticket->WFormId = $ret->WFormId;
+                        $ticket->Identifier = $ret->Identifier;
+                        $ticket->WFormSetTime = $ret->WFormSetTime;
+                        $ticket->ReplyDue = $ret->ReplyDue;
+                        $ticket->IsChecked = $ret->IsChecked;
+                        $ticket->ArriveDue = $ret->ArriveDue;
+                        $ticket->WFormContent = $ret->WFormContent;
+                        $ticket->OrgName = $ret->OrgName;
+                        $ticket->InstallAddress = $ret->InstallAddress;
+                        $ticket->ModelId = $ret->ModelId;
+                        $ticket->BrandId = $ret->BrandId;
+                        $ticket->RepairInfo = json_encode($ret->RepairInfo);
+                        $ticket->Engineer = $ret->RepairInfo->Engineer;
+                        $ticket->RepairCreateTime = $ret->RepairInfo->RepairCreateTime;
+                        $ticket->RespTime = $ret->RepairInfo->RespTime;
+                        $ticket->ArrivalTime = $ret->RepairInfo->ArrivalTime;
+                        $ticket->RepairformSts = $ret->RepairInfo->RepairformSts;
+                        $ticket->MaintianComTel = $ret->RepairInfo->MaintianComTel;
+                        $ticket->GivenArrivalTime = $ret->RepairInfo->GivenArrivalTime;
+                        $ticket->Mobile = $ret->RepairInfo->Mobile;
+                        $ticket->api_id = $api_id;
+                        $ticket->save();
+
+                        //step 2 send email
+
+                        //step 3 call ebs api
+                    }else{
+                        //check update
+                        if($historyTicket->Identifier != $ret->Identifier ||
+                            $historyTicket->WFormSetTime != $ret->WFormSetTime ||
+                                $historyTicket->ReplyDue != $ret->ReplyDue ||
+                                    $historyTicket->IsChecked != $ret->IsChecked ||
+                                        $historyTicket->ArriveDue != $ret->ArriveDue ||
+                                            $historyTicket->WFormContent != $ret->WFormContent ||
+                                                $historyTicket->OrgName != $ret->OrgName ||
+                                                    $historyTicket->InstallAddress != $ret->InstallAddress ||
+                                                        $historyTicket->ModelId != $ret->ModelId ||
+                                                            $historyTicket->BrandId != $ret->BrandId ||
+                                                                $historyTicket->Engineer != $ret->RepairInfo->Engineer ||
+                                                                    $historyTicket->RepairCreateTime != $ret->RepairInfo->RepairCreateTime ||
+                                                                        $historyTicket->RespTime != $ret->RepairInfo->RespTime ||
+                                                                            $historyTicket->ArrivalTime != $ret->RepairInfo->ArrivalTime ||
+                                                                                $historyTicket->RepairformSts != $ret->RepairInfo->RepairformSts ||
+                                                                                    $historyTicket->MaintianComTel != $ret->RepairInfo->MaintianComTel ||
+                                                                                        $historyTicket->GivenArrivalTime != $ret->RepairInfo->GivenArrivalTime ||
+                                                                                            $historyTicket->Mobile != $ret->RepairInfo->Mobile
+                        ){
+                            $ticket = new Ticket;
+                            $ticket->current = 1;
+                            $ticket->location_id = $historyTicket->location_id;
+                            $ticket->time_log = date('Y-m-d H:i:s');
+                            $ticket->data_content = $result;
+                            $ticket->WFormId = $ret->WFormId;
+                            $ticket->Identifier = $ret->Identifier;
+                            $ticket->WFormSetTime = $ret->WFormSetTime;
+                            $ticket->ReplyDue = $ret->ReplyDue;
+                            $ticket->IsChecked = $ret->IsChecked;
+                            $ticket->ArriveDue = $ret->ArriveDue;
+                            $ticket->WFormContent = $ret->WFormContent;
+                            $ticket->OrgName = $ret->OrgName;
+                            $ticket->InstallAddress = $ret->InstallAddress;
+                            $ticket->ModelId = $ret->ModelId;
+                            $ticket->BrandId = $ret->BrandId;
+                            $ticket->RepairInfo = json_encode($ret->RepairInfo);
+                            $ticket->Engineer = $ret->RepairInfo->Engineer;
+                            $ticket->RepairCreateTime = $ret->RepairInfo->RepairCreateTime;
+                            $ticket->RespTime = $ret->RepairInfo->RespTime;
+                            $ticket->ArrivalTime = $ret->RepairInfo->ArrivalTime;
+                            $ticket->RepairformSts = $ret->RepairInfo->RepairformSts;
+                            $ticket->MaintianComTel = $ret->RepairInfo->MaintianComTel;
+                            $ticket->GivenArrivalTime = $ret->RepairInfo->GivenArrivalTime;
+                            $ticket->Mobile = $ret->RepairInfo->Mobile;
+                            $ticket->api_id = $historyTicket->api_id;
+                            $ticket->ebs_id = $historyTicket->ebs_id;
+                            $ticket->ebs_content = $historyTicket->ebs_content;
+                            $ticket->flag1 = $historyTicket->flag1;
+                            $ticket->flag2 = $historyTicket->flag2;
+                            $ticket->flag3 = $historyTicket->flag3;
+                            $ticket->flag4 = $historyTicket->flag4;
+                            $ticket->flag5 = $historyTicket->flag5;
+                            $ticket->save();
+
+                            $historyTicket->current = 0;
+                            $historyTicket->save();
+                        }
+                    }
                 }
             }
+            //Timeout not responding (Select * from tb_ticket where current=1 and repairformset=1 and flag1=0 and repaircreatetime is not null and datediff(mi,repaircreatetime,now)>20)
+            $timeout_tickets = DB::select('select * from tickets where current=1 and RepairformSts=1 and flag1=0 and RepairCreateTime is not null and datediff(mi,RepairCreateTime,now)>20');
+            foreach($timeout_tickets as $t){
+                //send email to user
+
+            }
+            //update flag1 = 1;
+            DB::update('update tickets set flag1 = 1 where current=1 and RepairformSts=1 and flag1=0 and RepairCreateTime is not null and datediff(mi,RepairCreateTime,now)>20');
+
+            //Timeout is not present (Select * from tb_ticket where current=1 and repairformset=2 and flag2=0 and resptime is not null and datediff(mi,resptime,now)>20)
+            $timeout_tickets = DB::select('select * from tickets where current=1 and RepairformSts=2 and flag2=0 and RespTime is not null and datediff(mi,RespTime,now)>20');
+            foreach($timeout_tickets as $t){
+                //send email to user
+
+            }
+            //update flag2 = 1;
+            DB::update('update tickets set flag2 = 1 where current=1 and RepairformSts=2 and flag2=0 and RespTime is not null and datediff(mi,RespTime,now)>20');
+
+            //Timeout not repaired (Select * from tb_ticket where current=1 and repairformset=3 and flag3=0 and arrivaltime is not null and datediff(mi,arrivaltime,now)>20)
+            $timeout_tickets = DB::select('select * from tickets where current=1 and RepairformSts=3 and flag3=0 and ArrivalTime is not null and datediff(mi,ArrivalTime,now)>20');
+            foreach($timeout_tickets as $t){
+                //send email to user
+
+            }
+            //update flag3 = 1;
+            DB::update('update tickets set flag3 = 1 where current=1 and RepairformSts=3 and flag3=0 and ArrivalTime is not null and datediff(mi,ArrivalTime,now)>20');
         }
         $curl->close();
     }
 
     public function ebs(){
+        //10122015BIN0001
+        $millisecond = microtime(true)*1000;
+        $time = explode(".",$millisecond);
+        $millisecond = $time[0];
         $xml = "<?xml version = '1.0' encoding = 'UTF-8'?>
         <WnspServiceRequest>
             <address/>
-            <helpdeskNumber>10122015BIN0001</helpdeskNumber>
+            <helpdeskNumber>ABC".$millisecond."</helpdeskNumber>
             <reportedDate/>
             <event>CREATE</event>
             <customerName>ABC Nanjin 南京农行</customerName>

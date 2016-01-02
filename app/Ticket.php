@@ -39,7 +39,8 @@ class Ticket extends Model
         'flag2',
         'flag3',
         'flag4',
-        'flag5'
+        'flag5',
+        'api_id'
     ];
 
     public $ticketStatus = array(

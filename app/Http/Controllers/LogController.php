@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LogController extends Controller
 {
@@ -99,5 +100,27 @@ class LogController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function download(Request $request){
+        $date = $request->input('date', date('Y-m-d H:i:s'));
+        $logs = Log::dayBefore($date)->get();
+        $heads = ['日期','操作人','动作'];
+        $cellData[] = $heads;
+        foreach($logs as $log){
+            $cell = [$log->created_at,$log->operator,$log->action];
+            $cellData[] = $cell;
+        }
+        Excel::create(time(),function($excel) use ($cellData){
+            $excel->sheet('data', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
+    }
+
+    public function deletelog(Request $request){
+        $date = $request->input('date', date('Y-m-d H:i:s'));
+        Log::dayBefore($date)->delete();
+        echo json_encode("1");
     }
 }

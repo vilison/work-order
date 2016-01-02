@@ -29,6 +29,8 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('user/updatelr','UserController@updatelr');
 
     Route::get('log/index','LogController@index');
+    Route::post('log/download','LogController@download');
+    Route::post('log/deletelog','LogController@deletelog');
 
     Route::get('ticket/index','TicketController@index');
     Route::get('ticket/search','TicketController@search');

@@ -30,4 +30,10 @@ class Log extends Model
             return $query->where('action','like','%'.$key.'%');
         return $query;
     }
+
+    public function scopeDayBefore($query,$day){
+        if(!empty($day))
+            return $query->where('created_at','<=',$day);
+        return $query;
+    }
 }
