@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+    系统配置
+@stop
 @section('styles')
     <link href="{{ asset('assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
     <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
@@ -28,7 +31,7 @@
             <h3 class="panel-title">系统配置</h3>
         </div>
         <div class="panel-body">
-            <form id="form_usn" class="form-inline" action="setting/usn" method="post">
+            <form id="form_usn" class="form-inline" action="usn" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group">
                     <label for="supplier_number">供应商编号</label>
@@ -37,7 +40,7 @@
                 </div>
             </form>
             <div style="padding: 10px 0px;"><label>发送邮件配置</label></div>
-            <form class="form-inline row" id="form_usend" action="setting/usend" method="post">
+            <form class="form-inline row" id="form_usend" action="usend" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-3">
                     <label>服务器</label>
@@ -60,7 +63,7 @@
                 </div>
             </form>
             <div style="padding: 10px 0px;"><label>CRM服务器配置</label></div>
-            <form class="form-inline row" id="form_ucrm" action="setting/ucrm" method="post">
+            <form class="form-inline row" id="form_ucrm" action="ucrm" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-3">
                     <label>服务器</label>
@@ -88,7 +91,7 @@
                     <button type="button" class="btn btn-default" rel="ucrm">修改</button>
                 </div>
             </form>
-            <form class="form-inline row" id="form_utime" action="setting/utime" method="post">
+            <form class="form-inline row" id="form_utime" action="utime" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-12">
                     <label>列表刷新间隔</label>
@@ -135,7 +138,7 @@
                 @endforeach
             @endif
             <div style="background: #f5f5f5; padding-top:10px;padding-bottom:10px;">
-                <form class="form-inline row" id="form_nhserver" action="nhserver/store" method="post">
+                <form class="form-inline row" id="form_nhserver" action="/work-order/public/nhserver/store" method="post">
                     <input type="hidden" name="_token" value="{{csrf_token()}}">
                     <div class="form-group col-sm-1"></div>
                     <div class="form-group col-sm-3">
@@ -162,16 +165,17 @@
             <h3 class="panel-title">存档工具</h3>
         </div>
         <div class="panel-body">
-            <form class="form-inline row" style="margin-bottom: 10px;">
+            <form class="form-inline row" id="form_log" style="margin-bottom: 10px;" action="/work-order/public/log/download" method="post">
+                <input type="hidden" name="_token" value="{{csrf_token()}}">
                 <div class="form-group col-sm-4">
                     <label>此日期之前的日志</label>
                     <input class="form-control" type="text" name="date" id="date" data-date-format="yyyy-mm-dd" placeholder="">
                 </div>
                 <div class="form-group col-sm-1">
-                    <button type="submit" class="btn btn-success">下载</button>
+                    <button type="button" class="btn btn-success" rel="download">下载</button>
                 </div>
                 <div class="form-group col-sm-1">
-                    <button type="submit" class="btn btn-danger">删除</button>
+                    <button type="button" class="btn btn-danger" rel="deletelog">删除</button>
                 </div>
             </form>
         </div>
@@ -229,7 +233,7 @@
                 var id = $(this).parents("form").find("#id").val();
                 $.ajax({
                     type: 'POST',
-                    url: 'nhserver/update' ,
+                    url: '/work-order/public/nhserver/update' ,
                     data: {id:id,host:host,port:port,province:province,_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -250,7 +254,29 @@
                 });
             });
 
+            $("button[rel='download']").click(function(){
+                if($("#date").val()==""){
+                    $.scojs_message("请选择日期", $.scojs_message.TYPE_ERROR);
+                    return;
+                }
+                $("#form_log").attr("action","/work-order/public/log/download");
+                //$("#form_log").attr("method","get");
+                $('#form_log').submit();
+            });
 
+            $("button[rel='deletelog']").click(function(){
+                if($("#date").val()==""){
+                    $.scojs_message("请选择日期", $.scojs_message.TYPE_ERROR);
+                    return;
+                }
+                if(confirm("您确定要删除此日期前的日志？")){
+                    $("#form_log").attr("action","/work-order/public/log/deletelog");
+                    $('#form_log').ajaxSubmit(function(data){
+                        //$.scojs_message("修改成功", $.scojs_message.TYPE_OK);
+                        $.scojs_message("删除成功", $.scojs_message.TYPE_OK);
+                    });
+                }
+            });
         });
     </script>
 @stop

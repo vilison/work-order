@@ -38,7 +38,7 @@
                 }
                 $.ajax({
                     type: 'POST',
-                    url: '/auth/login' ,
+                    url: 'login' ,
                     data: {name:$("#name").val(),password:$("#password").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -58,7 +58,7 @@
 <body>
 <div class="warp">
     <h1>农行工单管理系统</h1>
-<form id="loginForm" method="POST" action="/auth/login">
+<form id="loginForm" method="POST" action="login">
     {!! csrf_field() !!}
     <div class="form-group">
         <input class="form-control" type="text" name="name" id="name" placeholder="用户名">

@@ -25,7 +25,7 @@
             $("#btn").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'ticket/ebspost' ,
+                    url: 'ebspost' ,
                     data: {xml:$("#xml").val(),_token:Config.token} ,
                     success: function(data){
                         $("#resp").text(data);
@@ -36,7 +36,7 @@
             $("#btn2").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'ticket/ebscallback' ,
+                    url: 'ebscallback' ,
                     data: {} ,
                     success: function(data){
                     }
@@ -46,7 +46,7 @@
             setInterval(function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'ticket/ebslog' ,
+                    url: 'ebslog' ,
                     data: {_token:Config.token} ,
                     success: function(data){
                         $("#log").text(data);
@@ -58,73 +58,14 @@
 </head>
 
 <body>
-<form id="call-form" action="ticket/ebscallback" method="post">
+<form id="call-form" action="ebscallback" method="post">
     <button id="btn2" type="button">Test callback</button>
 </form>
-<form id="post-form" action="ticket/ebspost" method="post">
+<form id="post-form" action="ebspost" method="post">
     <input type="hidden" name="_token" value="{{csrf_token()}}">
     callback：https://123.57.218.251:443/work-order/public/ticket/ebscallback<br/>
     <textarea id="xml" name="xml" cols="100" rows="20">
-        <?xml version = '1.0' encoding = 'UTF-8'?>
-        <WnspServiceRequest>
-            <address/>
-            <helpdeskNumber>10122015BIN0001</helpdeskNumber>
-            <reportedDate/>
-            <event>CREATE</event>
-            <customerName>ABC Nanjin 南京农行</customerName>
-            <customerAccountNumber>50CN5501585</customerAccountNumber>
-            <customerHelpdeskNumber/>
-            <customerTimezone>CSTCN</customerTimezone>
-            <project/>
-            <projectNumber/>
-            <productSerialNumber>P03CNEQ_10015305</productSerialNumber>
-            <productTag>1306011J</productTag>
-            <productSystem/>
-            <productDescription>ProCash 3100</productDescription>
-            <productCustomerSerialnumber/>
-            <installedAddress1></installedAddress1>
-            <installedAddress2/>
-            <installedAddress3></installedAddress3>
-            <installedAddress4/>
-            <installedCity>Chongqing</installedCity>
-            <installedState/>
-            <installedPostalcode>999999</installedPostalcode>
-            <installedCountry>CN</installedCountry>
-            <installedContact/>
-            <installedPhone/>
-            <installedFax/>
-            <installedEmail/>
-            <callerFirstName>Thomas</callerFirstName>
-            <callerLastName>Schlößer</callerLastName>
-            <callerPhone>+49 5251 693 4772</callerPhone>
-            <callerPhoneType>PHONE</callerPhoneType>
-            <callerEmail>thomas.schloesser@wincor-nixdorf.com</callerEmail>
-            <callerPreferredLanguage/>
-            <callerPreferredComm/>
-            <errorType>TT</errorType>
-            <urgency>PF</urgency>
-            <summary>CN - CustIn - Agriculture Bank of China</summary>
-            <customerErrorCode/>
-            <problemCode/>
-            <ordertext1>ordertext1</ordertext1>
-            <ordertext2>ordertext2</ordertext2>
-            <customerKey>CN_ABC_XINMAI</customerKey>
-            <status>New</status>
-            <channel>HTTP</channel>
-            <replyAddress>https://123.57.218.251/work-order/public/ticket/ebscallback</replyAddress>
-            <ownerName>CN Customer Interfaces</ownerName>
-            <serviceRequestNumber/>
-            <transactionNumber/>
-            <targetDate/>
-            <plannedEndCallback/>
-            <plannedStartFieldService/>
-            <plannedEndFieldService/>
-            <sparepartProposal/>
-            <preferredEngineer/>
-            <ServiceProviderID/>
-            <noteType />
-            <noteContent />
-        </WnspServiceRequest>
+        {{$xml}}
     </textarea>
     <a id="btn" class="btn btn-default">post</a>
 </form>

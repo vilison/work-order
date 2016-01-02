@@ -1,5 +1,10 @@
 @extends('layouts.default')
+@section('title')
+    工单浏览
+@stop
 @section('styles')
+    <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
+    <link href="{{ asset('assets/bootstrap-sco/css/sco.message.css')}}" rel="stylesheet" media="screen">
    <style>
        .table > thead > tr > th {
            vertical-align: middle;
@@ -10,11 +15,14 @@
        }
    </style>
 @stop
+@section('scripts')
+    <script type="text/javascript" src="{{ asset('assets/bootstrap-sco/js/sco.message.js')}}" charset="UTF-8"></script>
+@stop
 @section('content')
     <div class="panel panel-default">
         <div class="panel-body">
             当前显示：{{$tickets->firstItem()}} - {{$tickets->lastItem()}} （共{{$tickets->total()}}），<span id="selNum">{{$num}}</span>选中
-            <div class="pull-right"><a class="btn btn-primary" href="#" role="button">导出</a></div>
+            <div class="pull-right"><a class="btn btn-primary" role="button" rel="export">导出</a></div>
         </div>
     </div>
     <table class="table table-striped">
@@ -23,15 +31,15 @@
             <th rowspan="2">
                 <input type="checkbox" id="all-check" {{$allCheck?'checked':''}}>
             </th>
-            <th rowspan="2"><a href="order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=RepairformSts&sort={{$name=='RepairformSts'&&$sort=='asc'?'desc':'asc'}}">工单状态<span class="glyphicon glyphicon-arrow-{{$name=='RepairformSts'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th colspan="3" style="text-align: center; border:none;">
                 超时
             </th>
-            <th rowspan="2"><a href="order/index/?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="order/index/?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="order/index/?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="order/index/?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="order/index/?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=RepairCreateTime&sort={{$name=='RepairCreateTime'&&$sort=='asc'?'desc':'asc'}}">时间<span class="glyphicon glyphicon-arrow-{{$name=='RepairCreateTime'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <th rowspan="2"><a href="index?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2">操作</th>
         </tr>
         <tr >
@@ -57,7 +65,7 @@
                     <td>{{$o->getLocation()}}</td>
                     <td>{{$o->InstallAddress}}</td>
                     <td>
-                        <a href="ticket/show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
+                        <a href="show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
                     </td>
                 </tr>
             @endforeach
@@ -70,6 +78,21 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
+            $("a[rel='export']").click(function(){
+                $.ajax({
+                    type: 'POST',
+                    url: 'checkExport' ,
+                    data: {tag:'index',_token:Config.token} ,
+                    dataType: 'json',
+                    success: function(data){
+                        if(!data.result){
+                            $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
+                            return;
+                        }
+                        location.href = 'export?tag=index'
+                    }
+                });
+            });
             $("#all-check").change(function() {
                 var isChecked = $(this).prop("checked");
                 $("input[name='tid']").prop("checked", isChecked);
@@ -105,7 +128,7 @@
             });
             $.ajax({
                 type: 'POST',
-                url: 'ticket/check' ,
+                url: 'check' ,
                 data: {tids:tids,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -117,7 +140,7 @@
         function delCheck(tid){
             $.ajax({
                 type: 'POST',
-                url: 'ticket/delCheck' ,
+                url: 'delCheck' ,
                 data: {tid:tid,tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
@@ -128,7 +151,7 @@
         function clearCheck() {
             $.ajax({
                 type: 'POST',
-                url: 'ticket/clearCheck' ,
+                url: 'clearCheck' ,
                 data: {tag:'index',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){

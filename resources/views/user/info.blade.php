@@ -82,7 +82,7 @@
                 }
                 $.ajax({
                     type: 'POST',
-                    url: 'user/updatepwd' ,
+                    url: 'updatepwd' ,
                     data: {oldpassword:$("#oldpassword").val(),newpassword:$("#newpassword").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -99,7 +99,7 @@
             $("button[rel='updateemail']").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'user/updateemail' ,
+                    url: 'updateemail' ,
                     data: {email:$("#email").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){
@@ -115,7 +115,7 @@
             $("button[rel='updatelr']").click(function(){
                 $.ajax({
                     type: 'POST',
-                    url: 'user/updatelr' ,
+                    url: 'updatelr' ,
                     data: {listrow:$("#listrow").val(),_token:Config.token} ,
                     dataType: 'json',
                     success: function(data){

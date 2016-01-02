@@ -8,17 +8,17 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <p class="navbar-text navbar-right">当前用户： <a href="user/info" class="navbar-link">{{Auth::user()->name}}</a></p>
+            <p class="navbar-text navbar-right">当前用户： <a href="/work-order/public/user/info" class="navbar-link">{{Auth::user()->name}}</a></p>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="{{(Request::is('ticket/index*') ? 'active':'')}}"><a href="ticket/index">工单浏览</a></li>
-                <li class="{{(Request::is('ticket/search*') ? 'active':'')}}"><a href="ticket/search">工单查询</a></li>
-                <li class="{{(Request::is('user/index*') ? 'active':'')}}"><a href="user/index/">用户管理</a></li>
-                <li class="{{(Request::is('setting/index*') ? 'active':'')}}"><a href="setting/index/">系统配置</a></li>
-                <li class="{{(Request::is('log/index*') ? 'active':'')}}"><a href="log/index/">日志查看</a></li>
+                <li class="{{(Request::is('ticket/index*') ? 'active':'')}}"><a href="/work-order/public/ticket/index">工单浏览</a></li>
+                <li class="{{(Request::is('ticket/search*') ? 'active':'')}}"><a href="/work-order/public/ticket/search">工单查询</a></li>
+                <li class="{{(Request::is('user/index*') ? 'active':'')}}"><a href="/work-order/public/user/index">用户管理</a></li>
+                <li class="{{(Request::is('setting/index*') ? 'active':'')}}"><a href="/work-order/public/setting/index">系统配置</a></li>
+                <li class="{{(Request::is('log/index*') ? 'active':'')}}"><a href="/work-order/public/log/index">日志查看</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
 

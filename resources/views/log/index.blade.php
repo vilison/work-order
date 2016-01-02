@@ -1,4 +1,7 @@
 @extends('layouts.default')
+@section('title')
+    日志查看
+@stop
 @section('styles')
     <link href="{{ asset('assets/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
 @stop
