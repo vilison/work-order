@@ -483,8 +483,10 @@ class TicketController extends Controller
         file_put_contents($file, "post $dt\r\n", FILE_APPEND | LOCK_EX);
         file_put_contents($file, "$xml\r\n\r\n\r\n\r\n", FILE_APPEND | LOCK_EX);
         $curl = new Curl();
-        $curl->setHeader('Content-Type', 'text/xml');
-        $curl->post('https://edi-test.wincor-nixdorf.com/customer-in/v3.0/incident', $xml);
+        $curl->setHeader('Content-Type', 'text/xml;charset=UTF-8');
+
+        $curl->post('https://edi-test.wincor-nixdorf.com/customer-in/v3.0/incident', utf8_encode($xml));
+        //$curl->post('http://42.121.124.76/youhui/ebs_test.asp', $xml);
         echo $curl->response;
     }
 
