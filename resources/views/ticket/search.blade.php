@@ -143,7 +143,8 @@
             <th rowspan="2"><a href="search?name=WFormId&sort={{$name=='WFormId'&&$sort=='asc'?'desc':'asc'}}">工单号<span class="glyphicon glyphicon-arrow-{{$name=='WFormId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2"><a href="search?name=ModelId&sort={{$name=='ModelId'&&$sort=='asc'?'desc':'asc'}}">型号<span class="glyphicon glyphicon-arrow-{{$name=='ModelId'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2"><a href="search?name=status&sort={{$name==''&&$sort=='asc'?'desc':'asc'}}">省市<span class="glyphicon glyphicon-arrow-{{$name==''&&$sort=='desc'?'down':'up'}}"></span></a></th>
-            <th rowspan="2"><a href="search?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>
+            <!--<th rowspan="2"><a href="search?name=InstallAddress&sort={{$name=='InstallAddress'&&$sort=='asc'?'desc':'asc'}}">安装地址<span class="glyphicon glyphicon-arrow-{{$name=='InstallAddress'&&$sort=='desc'?'down':'up'}}"></span></a></th>-->
+            <th rowspan="2"><a href="index?name=Engineer&sort={{$name=='Engineer'&&$sort=='asc'?'desc':'asc'}}">工程师<span class="glyphicon glyphicon-arrow-{{$name=='Engineer'&&$sort=='desc'?'down':'up'}}"></span></a></th>
             <th rowspan="2">操作</th>
         </tr>
         <tr >
@@ -167,7 +168,8 @@
                     <td>{{$o->WFormId}}</td>
                     <td>{{$o->BrandId}}-{{$o->ModelId}}</td>
                     <td>{{$o->getLocation()}}</td>
-                    <td>{{$o->InstallAddress}}</td>
+                    <!--<td>{{$o->InstallAddress}}</td>-->
+                    <td>{{$o->getEngineer()}}</td>
                     <td>
                         <a href="show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
                     </td>
