@@ -14,7 +14,7 @@
                 工单状态：{{$ticket->getTicketStatu()}}<br/>
                 超时：{{$ticket->getResp($setting->warn_timeout,"响应超时")}}{{$ticket->getArrival($setting->warn_timeout,"到场超时")}}{{$ticket->getRepair($setting->warn_timeout,"修复超时")}}<br/>
                 所在地区：{{$ticket->getLocation()}}<br/>
-                负责工程师：{{$ticket->Engineer}}<br/>
+                负责工程师：{{$ticket->getEngineer()}}<br/>
                 最后更新：{{$ticket->created_at}}
             </p>
         </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="panel-body">
             <p>
-                工程师：{{$ticket->Engineer}}<br/>
+                工程师：{{$ticket->getEngineer()}}<br/>
                 报修时间：{{$ticket->RepairCreateTime}}<br/>
                 响应时间：{{$ticket->RespTime}}<br/>
                 到场认证时间：{{$ticket->ArrivalTime}}<br/>
