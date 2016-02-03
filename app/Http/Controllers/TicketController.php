@@ -27,7 +27,7 @@ class TicketController extends Controller
         //
         $pageSize = 10;
         $name = $request->input('name', 'RepairCreateTime');
-        $sort = $request->input('sort', 'desc');
+        $sort = $request->input('sort', 'asc');
         $tickets = Ticket::current()->order($name,$sort)->paginate($pageSize);
         $tickets->setPath('index');
         $setting = Setting::find(1);
