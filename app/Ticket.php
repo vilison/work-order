@@ -114,8 +114,10 @@ class Ticket extends Model
     }
 
     public function scopeBetween($query,$day1,$day2){
-        if(!empty($day1) && !empty($day2))
-            return $query->whereBetween('RepairCreateTime', array($day1, $day2));
+        if(!empty($day1))
+            $query->whereRaw("DATE_FORMAT(RepairCreateTime,'%Y-%m-%d') >= '".$day1."'");
+        if(!empty($day2))
+            $query->whereRaw("DATE_FORMAT(RepairCreateTime,'%Y-%m-%d') <= '".$day2."'");
         return $query;
     }
 
@@ -139,8 +141,18 @@ class Ticket extends Model
      * @return mixed
      */
     public function scopeSn($query,$sn){
-        if(!empty($identifier)){
-            return $query->where('sn','=',$sn);
+        if(!empty($sn)){
+            //return $query->where('Identifier','like','%'.$identifier.'%');
+            $engineerDevices = EngineerDevice::sn($sn);
+            if($engineerDevices){
+                $ids = array();
+                foreach($engineerDevices as $engineerDevice){
+                    $ids[] = $engineerDevice->identifier;
+                }
+                if($ids){
+                    return $query->whereIn('Identifier',$ids);
+                }
+            }
         }
         return $query;
     }
@@ -152,35 +164,36 @@ class Ticket extends Model
      */
     public function scopeCcc($query,$ccc){
         if(!empty($ccc)){
-            return $query->where('ccc','=',$ccc);
+            return $query->where('ebs_id','like','%'.$ccc.'%');
         }
         return $query;
     }
 
     public function scopeWformid($query,$wformid){
         if(!empty($wformid)){
-            return $query->where('WFormId','=',$wformid);
+            return $query->where('WFormId','like','%'.$wformid.'%');
         }
         return $query;
     }
 
     public function scopeEngineer($query,$engineer){
         if(!empty($engineer)){
-            $engineers = Engineer::name($engineer);
-            if($engineers){
-                $ids = array();
-                foreach($engineers as $engineer){
-                    $ids[] = $engineer->id;
-                }
-                $eds = EngineerDevice::eids($ids);
-                if($eds){
-                    $eids = array();
-                    foreach($eds as $ed){
-                        $eids[] = $ed->identifier;
-                    }
-                    return $query->whereIn('Identifier',$eids);
-                }
-            }
+            return $query->where('Engineer','like','%'.$engineer.'%');
+//            $engineers = Engineer::name($engineer);
+//            if($engineers){
+//                $ids = array();
+//                foreach($engineers as $engineer){
+//                    $ids[] = $engineer->id;
+//                }
+//                $eds = EngineerDevice::eids($ids);
+//                if($eds){
+//                    $eids = array();
+//                    foreach($eds as $ed){
+//                        $eids[] = $ed->identifier;
+//                    }
+//                    return $query->whereIn('Identifier',$eids);
+//                }
+//            }
 
         }
         return $query;
