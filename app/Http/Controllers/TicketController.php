@@ -249,10 +249,12 @@ class TicketController extends Controller
     }
 
     public function delCheck(Request $request){
-        $tid = $request->tid;
+        $tids = $request->tids;
         $tag = $request->tag;
         $ids = $request->session()->get($tag.'.tids',array());
-        unset($ids[$tid]);
+        foreach($tids as $tid){
+            unset($ids[$tid]);
+        }
         $request->session()->put($tag.'.tids',$ids);
         $data['count'] = count($ids);
         $data['tids'] = $ids;
