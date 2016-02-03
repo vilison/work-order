@@ -77,7 +77,7 @@
         <div class="panel-body">
             <p>
                 <a href="nhdata/{{$ticket->id}}" class="btn btn-default btn-xs">农行接口数据原文</a>
-                <a href="#" class="btn btn-default btn-xs">EBS接口数据原文</a>
+                <a href="ebsdata/{{$ticket->id}}" class="btn btn-default btn-xs">EBS接口数据原文</a>
             </p>
         </div>
     </div>
