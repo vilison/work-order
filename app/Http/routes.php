@@ -39,8 +39,8 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('ticket/clearCheck','TicketController@clearCheck');
     Route::post('ticket/delCheck','TicketController@delCheck');
     Route::get('ticket/show/{id}','TicketController@show');
-    Route::get('ticket/nhdata/{id}','TicketController@nhdata');
-    Route::get('ticket/ebsdata/{id}','TicketController@ebsdata');
+    Route::get('ticket/show/nhdata/{id}','TicketController@nhdata');
+    Route::get('ticket/show/ebsdata/{id}','TicketController@ebsdata');
     Route::post('ticket/checkExport','TicketController@checkExport');
     Route::get('ticket/export','TicketController@export');
 
