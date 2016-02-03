@@ -65,7 +65,7 @@
                     <td>{{$o->BrandId}}-{{$o->ModelId}}</td>
                     <td>{{$o->getLocation()}}</td>
                     <!--<td>{{$o->InstallAddress}}</td>-->
-                    <td>{{$o->Engineer}}</td>
+                    <td>{{$o->getEngineer()}}</td>
                     <td>
                         <a href="show/{{$o->id}}" class="btn btn-default btn-xs">查看</a>
                     </td>
