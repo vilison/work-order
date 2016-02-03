@@ -203,9 +203,11 @@
                 if (isChecked) {
                     check();
                 }else{
+                    var tids = new Array();
                     $("input[name='tid']").each(function(){
-                        delCheck($(this).val());
+                        tids.push($(this).val());
                     });
+                    delCheck(tids);
                 }
             });
             $("#clearCheck").click(function(){
@@ -216,7 +218,7 @@
                 if(isChecked){
                     check();
                 }else{
-                    delCheck($(this).val());
+                    delCheck([$(this).val()]);
                     $("#all-check").prop("checked", false);
                 }
             });
@@ -237,11 +239,11 @@
             });
         }
 
-        function delCheck(tid){
+        function delCheck(tids){
             $.ajax({
                 type: 'POST',
                 url: 'delCheck' ,
-                data: {tid:tid,tag:'search',_token:Config.token} ,
+                data: {tids:tids,tag:'search',_token:Config.token} ,
                 dataType: 'json',
                 success: function(data){
                     changeCount(data.count);
