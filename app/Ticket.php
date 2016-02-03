@@ -101,6 +101,12 @@ class Ticket extends Model
         return '';
     }
 
+    public function getEngineer(){
+        if($this->Engineer == 'null')
+            return '';
+        return $this->Engineer;
+    }
+
     public function scopeOrder($query,$name,$sort){
         if(empty($name))
             $name = 'RepairCreateTime';
