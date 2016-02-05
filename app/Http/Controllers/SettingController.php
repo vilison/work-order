@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\EngineerDevice;
 use App\Nhserver;
 use App\Setting;
 use Illuminate\Http\Request;
@@ -21,9 +22,15 @@ class SettingController extends Controller
         //
         $setting = Setting::findOrFail(1);
         $nhservers = Nhserver::all();
+        $devices = EngineerDevice::groupBy("device_sn")->count('device_sn');
+        $locations = EngineerDevice::groupBy('location_name')->count('location_name');
+        $engineers = EngineerDevice::groupBy('engineer_name')->count('engineer_name');
         return view('setting.index',array(
             'setting'=>$setting,
-            'nhservers' => $nhservers
+            'nhservers' => $nhservers,
+            'devices' => $devices,
+            'locations' => $locations,
+            'engineers' => $engineers
         ));
     }
 
@@ -125,6 +132,40 @@ class SettingController extends Controller
             $setting->refresh_interval = 1;
         $setting->warn_timeout = $request->warn_timeout;
         $setting->save();
+        echo 1;
+    }
+
+    public function unengineer(Request $request){
+        $input = $request->all();
+        $messages = array(
+            'oename.required' => '请填写旧工程师姓名！',
+            'omobile.required' => '请填写旧工程师手机号！',
+            'nename.required' => '请填写新工程师姓名！',
+            'nmobile.required' => '请填写新工程师手机号！',
+        );
+        $validator = $this->getValidationFactory()->make($input,[
+            'oename' => 'required',
+            'omobile' => 'required',
+            'nename' => 'required',
+            'nmobile' => 'required',
+        ], $messages);
+
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return $messages;
+        }
+        $oename = $request->oename;
+        $omobile = $request->omobile;
+        $nename = $request->nename;
+        $nmobile = $request->nmobile;
+
+        $engineerDevice = EngineerDevice::nameMobile($oename,$omobile)->get();
+        if(empty($engineerDevice->items)){
+            return response()->json(['msg' => '工程师不存在！']);
+        }
+        EngineerDevice::
+            nameMobile($oename,$omobile)
+            ->update(['engineer_name' => $nename,'mobile' => $nmobile]);
         echo 1;
     }
 
