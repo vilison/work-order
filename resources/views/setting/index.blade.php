@@ -180,6 +180,49 @@
             </form>
         </div>
     </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">工程师管理</h3>
+        </div>
+        <div class="panel-body">
+            <div>当前状态：{{$devices}}台设备，{{$locations}}个省市，{{$engineers}}个工程师</div>
+            <form class="form-inline row" id="form_unengineer" style="margin-bottom: 10px;" action="unengineer" method="post">
+                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                <div style="margin: 10px 0px; text-align: right;">
+                    <div class="form-group col-sm-4">
+                        <label style="float:left;">工程师替换</label>
+                        <input class="form-control" type="text" name="oename" id="oename" placeholder="旧工程师姓名">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <input class="form-control" type="text" name="omobile" id="omobile" placeholder="旧工程师手机号">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div style="margin: 10px 0px; text-align: right;">
+                    <div class="form-group col-sm-4">
+                        <input class="form-control" type="text" name="nename" id="nename" placeholder="新工程师姓名">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <input class="form-control" type="text" name="nmobile" id="nmobile" placeholder="新工程师手机号">
+                    </div>
+                    <div class="form-group col-sm-1">
+                        <button type="button" class="btn btn-primary" rel="unengineer">修改</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </form>
+            <form class="form-inline row" id="form_upload" style="margin-bottom: 10px;" action="upload" method="post">
+                <input type="hidden" name="_token" value="{{csrf_token()}}">
+                <div class="form-group col-sm-5">
+                    <label >上传更新数据库</label>
+                    <input class="form-control" type="file" name="jdata" id="jdata" placeholder="">
+                </div>
+                <div class="form-group col-sm-1">
+                    <button type="button" class="btn btn-primary" rel="upload">上传</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <div style="height: 250px;"></div>
     <script type="text/javascript">
         $(document).ready(function(){
@@ -276,6 +319,29 @@
                         $.scojs_message("删除成功", $.scojs_message.TYPE_OK);
                     });
                 }
+            });
+
+            $("button[rel='unengineer']").click(function(){
+                $('#form_unengineer').ajaxSubmit(function(data){
+                    var msg = '';
+                    if(data.oename){
+                        msg = data.oename;
+                    }else if(data.omobile){
+                        msg = data.omobile;
+                    }else if(data.nename){
+                        msg = data.nename;
+                    }else if(data.nmobile){
+                        msg = data.nmobile;
+                    }else if(data.msg){
+                        msg = data.msg;
+                    }
+                    if(msg!=''){
+                        $.scojs_message(msg, $.scojs_message.TYPE_ERROR);
+                        return;
+                    }
+                    $.scojs_message("修改成功", $.scojs_message.TYPE_OK);
+                    //location.reload();
+                });
             });
         });
     </script>
