@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>农行工单管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link rel="stylesheet" href="{{ asset('assets/bootstrap-3.3.5/css/bootstrap.css')}}">
     <script src="{{ asset('assets/js/jquery.min.js')}}" type="text/javascript"></script>
     <script src="{{ asset('assets/js/jquery.form.js')}}" type="text/javascript"></script>
@@ -22,7 +23,7 @@
         .warp {
             width: 300px;
             margin: 0px auto;
-            margin-top: 200px;
+            margin-top: 10px;
         }
     </style>
     <script type="text/javascript">
@@ -57,6 +58,7 @@
 
 <body>
 <div class="warp">
+    <div><img width="100%" src="{{ asset('assets/images/logo.jpg')}}" /></div>
     <h1>农行工单管理系统</h1>
 <form id="loginForm" method="POST" action="login">
     {!! csrf_field() !!}
