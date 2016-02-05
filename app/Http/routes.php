@@ -49,6 +49,7 @@ Route::group(['middleware'=>'auth'], function(){
     Route::post('setting/usend','SettingController@usend');
     Route::post('setting/ucrm','SettingController@ucrm');
     Route::post('setting/utime','SettingController@utime');
+    Route::post('setting/unengineer','SettingController@unengineer');
 
     Route::post('nhserver/store','NhserverController@store');
     Route::post('nhserver/update','NhserverController@update');
