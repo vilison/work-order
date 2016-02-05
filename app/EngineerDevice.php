@@ -23,6 +23,12 @@ class EngineerDevice extends Model
         return $query;
     }
 
+    public function scopeNameMobile($query,$name,$mobile){
+        if(!empty($name) && !empty($mobile))
+            return $query->where('engineer_name','=',$name)->where('mobile','=',$mobile);
+        return $query;
+    }
+
 //    public function scopeEids($query,$eids){
 //        if(!empty($eids)){
 //            return $query->whereIn('engineer_id',$eids);
