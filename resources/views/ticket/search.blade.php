@@ -7,6 +7,11 @@
     <link href="{{ asset('assets/bootstrap-sco/css/scojs.css')}}" rel="stylesheet" media="screen">
     <link href="{{ asset('assets/bootstrap-sco/css/sco.message.css')}}" rel="stylesheet" media="screen">
     <style>
+        @media (max-width: 640px) {
+            .export{
+                display: none;
+            }
+        }
         .table > thead > tr > th {
             vertical-align: middle;
             text-align: center;
@@ -48,10 +53,12 @@
         <div class="panel-body">
             <div>
             搜索结果：{{$tickets->firstItem()}} - {{$tickets->lastItem()}} （共{{$tickets->total()}}），<span id="selNum">{{$num}}</span>选中
-            <div class="pull-right"><a class="btn btn-primary" role="button" rel="export">导出</a></div>
+            <div class="pull-right">
+                <a class="btn btn-primary export" style="margin-right: 10px;" role="button" rel="export">导出</a>
+                <a class="btn btn-default" role="button" rel="col"><span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></div>
                 <div style="clear: both;"></div>
             </div>
-            <div style="margin-top: 10px;">
+            <div id="col-area" style="display:none;margin-top: 10px;">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label" for="bdate">时间</label>
@@ -184,6 +191,19 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
+            $("a[rel='col']").click(function(){
+                if($("#col-area").css("display") == "none"){
+                    var down = $(".glyphicon-menu-down");
+                    down.removeClass("glyphicon-menu-down");
+                    down.addClass("glyphicon-menu-up");
+                    $("#col-area").css("display","block");
+                }else{
+                    var up = $(".glyphicon-menu-up");
+                    up.removeClass("glyphicon-menu-up");
+                    up.addClass("glyphicon-menu-down");
+                    $("#col-area").css("display","none");
+                }
+            });
             $("a[rel='export']").click(function(){
                 $.ajax({
                     type: 'POST',
