@@ -13,7 +13,7 @@ use Auth;
 class AuthController extends Controller
 {
 
-    protected $redirectAfterLogout = '/work-order/public/auth/login';
+    protected $redirectAfterLogout = '/auth/login';
     protected $redirectPath  = '/work-order/public/ticket/index';
     protected $loginPath = '/work-order/public/auth/login';
 
@@ -58,7 +58,6 @@ class AuthController extends Controller
     public function getLogout()
     {
         Auth::logout();
-
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
 }
