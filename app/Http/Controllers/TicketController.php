@@ -123,7 +123,7 @@ class TicketController extends Controller
 //        if(count($ids) == 0){
 //            return json_encode(array('msg'=>'请选择要导出的数据'));
 //        }
-        $heads = ['location','time_log','WFormId','Identifier','WFormSetTime','ReplyDue','IsChecked','ArriveDue','WFormContent','OrgName','InstallAddress','ModelId','BrandId','Engineer','RepairCreateTime','RespTime','ArrivalTime','RepairformSts','MaintianComTel','GivenArrivalTime','Mobile','ebs_id'];
+        $heads = ['地区','记录时间','工单编号','前置编号','工单开始时间','未响应时间','是否响应','到场超时时间','故障内容','机构名称','安装地址','型号','品牌','反馈工程师','报修时间','响应时间','到场认证时间','报修状态','厂商的维保电话','厂商给出的预计到达时间','农行报修人的电话','EBS返回的编码'];
         $cellData[] = $heads;
         foreach($ids as $id){
             $ticket = Ticket::find($id);
