@@ -8,7 +8,18 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <p class="navbar-text navbar-right">当前用户： <a href="/work-order/public/user/info" class="navbar-link">{{Auth::user()->name}}</a></p>
+            <ul class="nav nav-pills navbar-right">
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        当前用户： {{Auth::user()->name}} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/work-order/public/user/info"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 个人设置</a></li>
+                        <li><a href="/work-order/public/auth/logout"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> 登出</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <!--<p class="navbar-text navbar-right">当前用户： <a href="/work-order/public/user/info" class="navbar-link">{{Auth::user()->name}}</a></p>-->
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
